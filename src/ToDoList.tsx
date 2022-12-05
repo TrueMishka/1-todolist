@@ -11,7 +11,7 @@ type TaskType = {
     title: string;
     isDone: boolean;
 }
-const ToDoList = (props: ToDoListPropsType) => {
+export const ToDoList = (props: ToDoListPropsType) => {
     return (
         <div>
             <h3>{props.title}</h3>
@@ -34,5 +34,3 @@ const ToDoList = (props: ToDoListPropsType) => {
         </div>
     );
 }
-
-export default ToDoList;

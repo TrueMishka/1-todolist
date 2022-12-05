@@ -1,8 +1,11 @@
 import React from 'react';
 import './App.css';
-import ToDoList from "./ToDoList";
+import {ToDoList} from "./ToDoList";
 
 const App = () => {
+
+    const title1 = 'November';
+    const title2 = 'December';
 
     const tasks1 = [
         { id: 1, title: "HTML&CSS", isDone: true },
@@ -18,8 +21,8 @@ const App = () => {
 
     return (
         <div className="App">
-            <ToDoList title={'November'} task={tasks1}/>
-            <ToDoList title={'December'} task={tasks2}/>
+            <ToDoList title={title1} task={tasks1}/>
+            <ToDoList title={title2} task={tasks2}/>
         </div>
     );
 }
