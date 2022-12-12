@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {ToDoList} from "./ToDoList";
 
-export type FilterType = 'All' | 'Active' | 'Completed';
+export type FilterType = 'All' | 'Active' | 'Completed' | 'FirstThree';
 
 const App = () => {
 
@@ -11,25 +11,21 @@ const App = () => {
     let [tasks, setList] = useState([
         {id: 1, title: "HTML&CSS", isDone: true},
         {id: 2, title: "JS", isDone: true},
-        {id: 3, title: "ReactJS", isDone: false}
+        {id: 3, title: "ReactJS", isDone: false},
+        {id: 4, title: "qwd", isDone: false},
+        {id: 5, title: "asd", isDone: true},
+        {id: 6, title: "gdf", isDone: false},
+        {id: 7, title: "asd", isDone: true},
+        {id: 8, title: "xvd", isDone: false},
     ]);
     let [filter, setFilter] = useState<FilterType>('All');
-    /*let filteredTasks = tasks;
-
-    if (filter === 'Active') {
-        filteredTasks = tasks.filter(t => !t.isDone);
-    }else if (filter === 'Completed') {
-        filteredTasks = tasks.filter(t => t.isDone);
-    }else {
-        filteredTasks = tasks;
-    }
-
-    const filterItemList = (value: FilterType) => {
-        setFilter(value);
-    }*/
 
     const removeItemList = (id: number) => {
         setList(tasks.filter(t => t.id !== id));
+    }
+
+    const deleteAllTask = () => {
+        setList([]);
     }
 
     const checkItemList = (id: number) => {
@@ -56,6 +52,7 @@ const App = () => {
                 checkItemList={checkItemList}
                 filter={filter}
                 setFilter={setFilter}
+                deleteAllTask = {deleteAllTask}
             />
         </div>
     );

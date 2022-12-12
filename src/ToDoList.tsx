@@ -8,6 +8,7 @@ type ToDoListPropsType = {
     checkItemList: (id: number) => void
     filter: FilterType
     setFilter: (filter: FilterType) => void
+    deleteAllTask: () => void
 }
 
 type TaskType = {
@@ -23,6 +24,8 @@ export const ToDoList = (props: ToDoListPropsType) => {
         filteredTasks = props.task.filter(t => !t.isDone);
     } else if (props.filter === 'Completed') {
         filteredTasks = props.task.filter(t => t.isDone);
+    }else if (props.filter === 'FirstThree') {
+        filteredTasks = props.task.filter(t => t.id < 4)
     } else {
         filteredTasks = props.task;
     }
@@ -55,6 +58,9 @@ export const ToDoList = (props: ToDoListPropsType) => {
                 })}
             </ul>
             <div>
+                <button onClick={props.deleteAllTask}>DELETE ALL TASK</button>
+            </div>
+            <div>
                 <button onClick={() => {
                     filterItemList("All")
                 }}>All
@@ -66,6 +72,10 @@ export const ToDoList = (props: ToDoListPropsType) => {
                 <button onClick={() => {
                     filterItemList("Completed")
                 }}>Completed
+                </button>
+                <button onClick={() => {
+                    filterItemList("FirstThree")
+                }}>First three
                 </button>
             </div>
         </div>
