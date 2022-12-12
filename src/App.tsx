@@ -1,28 +1,62 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import {ToDoList} from "./ToDoList";
 
+export type FilterType = 'All' | 'Active' | 'Completed';
+
 const App = () => {
 
-    const title1 = 'November';
-    const title2 = 'December';
+    const title = 'What to learn';
 
-    const tasks1 = [
-        { id: 1, title: "HTML&CSS", isDone: true },
-        { id: 2, title: "JS", isDone: true },
-        { id: 3, title: "ReactJS", isDone: false }
-    ]
-    const tasks2 = [
-        { id: 1, title: "Hello world", isDone: true },
-        { id: 2, title: "I am Happy", isDone: false },
-        { id: 3, title: "Yo", isDone: false },
-        { id: 4, title: "Yo", isDone: false }
-    ]
+    let [tasks, setList] = useState([
+        {id: 1, title: "HTML&CSS", isDone: true},
+        {id: 2, title: "JS", isDone: true},
+        {id: 3, title: "ReactJS", isDone: false}
+    ]);
+    let [filter, setFilter] = useState<FilterType>('All');
+    /*let filteredTasks = tasks;
+
+    if (filter === 'Active') {
+        filteredTasks = tasks.filter(t => !t.isDone);
+    }else if (filter === 'Completed') {
+        filteredTasks = tasks.filter(t => t.isDone);
+    }else {
+        filteredTasks = tasks;
+    }
+
+    const filterItemList = (value: FilterType) => {
+        setFilter(value);
+    }*/
+
+    const removeItemList = (id: number) => {
+        setList(tasks.filter(t => t.id !== id));
+    }
+
+    const checkItemList = (id: number) => {
+        const changedItemList = tasks.map(t=>{
+            if (t.id === id) {
+                if(t.isDone) {
+                    return {...t, isDone: false}
+                }else {
+                    return {...t, isDone: true}
+                }
+            }
+            return t
+        })
+
+        setList(changedItemList)
+    }
 
     return (
         <div className="App">
-            <ToDoList title={title1} task={tasks1}/>
-            <ToDoList title={title2} task={tasks2}/>
+            <ToDoList
+                title={title}
+                task={tasks}
+                removeButton={removeItemList}
+                checkItemList={checkItemList}
+                filter={filter}
+                setFilter={setFilter}
+            />
         </div>
     );
 }
