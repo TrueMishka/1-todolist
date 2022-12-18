@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {FilterType} from "./App";
 
 type ToDoListPropsType = {
-    title?: string;
-    task: Array<TaskType>;
+    title: string
+    task: TaskType[]
     removeButton: (id: number) => void
     checkItemList: (id: number) => void
     filter: FilterType
@@ -25,7 +25,7 @@ export const ToDoList = (props: ToDoListPropsType) => {
     } else if (props.filter === 'Completed') {
         filteredTasks = props.task.filter(t => t.isDone);
     }else if (props.filter === 'FirstThree') {
-        filteredTasks = props.task.filter(t => t.id < 4)
+        filteredTasks = props.task.filter((t, index) => index < 3)
     } else {
         filteredTasks = props.task;
     }
@@ -42,9 +42,9 @@ export const ToDoList = (props: ToDoListPropsType) => {
                 <button>+</button>
             </div>
             <ul>
-                {filteredTasks.map(el => {
+                {filteredTasks.map((el, index) => {
                     return (
-                        <li key={el.id}>
+                        <li key={index}>
                             <button onClick={() => {
                                 props.removeButton(el.id)
                             }}>x
