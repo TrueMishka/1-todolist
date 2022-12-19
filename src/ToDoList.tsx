@@ -7,7 +7,6 @@ type ToDoListPropsType = {
     task: TaskType[]
     removeButton: (id: string) => void
     checkItemList: (id: string) => void
-    filter: FilterType
     setFilter: (filter: FilterType) => void
     deleteAllTask: () => void
     addTask: (taskTitle: string) => void
@@ -19,18 +18,6 @@ type TaskType = {
     isDone: boolean;
 }
 export const ToDoList = (props: ToDoListPropsType) => {
-
-    let filteredTasks = props.task;
-
-    if (props.filter === 'Active') {
-        filteredTasks = props.task.filter(t => !t.isDone);
-    } else if (props.filter === 'Completed') {
-        filteredTasks = props.task.filter(t => t.isDone);
-    }else if (props.filter === 'FirstThree') {
-        filteredTasks = props.task.filter((t, index) => index < 3)
-    } else {
-        filteredTasks = props.task;
-    }
 
     const filterItemList = (filter: FilterType) => {
         props.setFilter(filter);
@@ -62,7 +49,7 @@ export const ToDoList = (props: ToDoListPropsType) => {
                 <Button name={'add'} callBack={onClickAddTaskHandler}/>
             </div>
             <ul>
-                {filteredTasks.map((el, index) => {
+                {props.task.map((el, index) => {
                     const onClickCheckHandler = () => {
                         props.checkItemList(el.id);
                     }

@@ -21,14 +21,24 @@ const App = () => {
     ]);
     let [filter, setFilter] = useState<FilterType>('All');
 
+    let filteredTasks = tasks;
+
+    if (filter === 'Active') {
+        filteredTasks = tasks.filter(t => !t.isDone);
+    } else if (filter === 'Completed') {
+        filteredTasks = tasks.filter(t => t.isDone);
+    }else if (filter === 'FirstThree') {
+        filteredTasks = tasks.filter((t, index) => index < 3)
+    } else {
+        filteredTasks = tasks;
+    }
+
     const removeItemList = (id: string) => {
         setList(tasks.filter(t => t.id !== id));
     }
-
     const deleteAllTask = () => {
         setList([]);
     }
-
     const checkItemList = (id: string) => {
         const changedItemList = tasks.map(t=>{
             if (t.id === id) {
@@ -43,7 +53,6 @@ const App = () => {
 
         setList(changedItemList)
     }
-
     const addTask = (taskTitle: string) => {
         const newTask = {id: v1(), title: taskTitle, isDone: false};
         const newTasks = [newTask, ...tasks];
@@ -54,10 +63,9 @@ const App = () => {
         <div className="App">
             <ToDoList
                 title={title}
-                task={tasks}
+                task={filteredTasks}
                 removeButton={removeItemList}
                 checkItemList={checkItemList}
-                filter={filter}
                 setFilter={setFilter}
                 deleteAllTask = {deleteAllTask}
                 addTask = {addTask}
