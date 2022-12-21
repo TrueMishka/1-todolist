@@ -21,17 +21,20 @@ const App = () => {
     ]);
     let [filter, setFilter] = useState<FilterType>('All');
 
-    let filteredTasks = tasks;
+    const filteredTasksInit = () => {
 
-    if (filter === 'Active') {
-        filteredTasks = tasks.filter(t => !t.isDone);
-    } else if (filter === 'Completed') {
-        filteredTasks = tasks.filter(t => t.isDone);
-    } else if (filter === 'FirstThree') {
-        filteredTasks = tasks.filter((t, index) => index < 3)
-    } else {
-        filteredTasks = tasks;
+        switch (filter) {
+            case "Completed":
+                return tasks.filter(t => t.isDone);
+            case "Active":
+                return tasks.filter(t => !t.isDone);
+            case "FirstThree":
+                return tasks.filter((t, index) => index < 3);
+            default:
+                return tasks;
+        }
     }
+    let filteredTasks = filteredTasksInit();
 
     const removeItemList = (id: string) => {
         setList(tasks.filter(t => t.id !== id));
@@ -40,11 +43,11 @@ const App = () => {
         setList([]);
     }
     const checkItemList = (id: string) => {
-        const changedItemList = tasks.map(t => {
+        const changedItemList = tasks.map(t=>{
             if (t.id === id) {
-                if (t.isDone) {
+                if(t.isDone) {
                     return {...t, isDone: false}
-                } else {
+                }else {
                     return {...t, isDone: true}
                 }
             }
@@ -60,18 +63,16 @@ const App = () => {
     }
 
     return (
-        <div className={'App'}>
-            <ToDoList title={title}
-                      task={filteredTasks}
-                      removeButton={removeItemList}
-                      checkItemList={checkItemList}
-                      setFilter={setFilter}
-                      deleteAllTask={deleteAllTask}
-                      addTask={addTask}>
-                <div>
-                    <div>Many interesting information</div>
-                </div>
-            </ToDoList>
+        <div className="App">
+            <ToDoList
+                title={title}
+                task={filteredTasks}
+                removeButton={removeItemList}
+                checkItemList={checkItemList}
+                setFilter={setFilter}
+                deleteAllTask = {deleteAllTask}
+                addTask = {addTask}
+            />
         </div>
     );
 }
