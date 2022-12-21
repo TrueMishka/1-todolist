@@ -1,6 +1,7 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import React, {KeyboardEvent, useRef} from "react";
 import {FilterType} from "./App";
 import {Button} from "./components/Button";
+import {useAutoAnimate} from "@formkit/auto-animate/react";
 
 type ToDoListPropsType = {
     title: string
@@ -10,6 +11,7 @@ type ToDoListPropsType = {
     setFilter: (filter: FilterType) => void
     deleteAllTask: () => void
     addTask: (taskTitle: string) => void
+    children?: React.ReactNode
 }
 
 type TaskType = {
@@ -17,23 +19,23 @@ type TaskType = {
     title: string;
     isDone: boolean;
 }
-export const ToDoList = (props: ToDoListPropsType) => {
+export const ToDoList:React.FC<ToDoListPropsType> = ({children, ...props}) => {
+
+    let onChangeRef = useRef<HTMLInputElement>(null);
+    const [listRef] = useAutoAnimate<HTMLUListElement>();
 
     const filterItemList = (filter: FilterType) => {
         props.setFilter(filter);
     }
 
-    const [InputValue, setInputValue] = useState('');
-
     const onClickDeleteAllTask = () => {
         props.deleteAllTask();
     }
     const onClickAddTaskHandler = () => {
-        props.addTask(InputValue);
-        setInputValue('');
-    }
-    const onChangeInputValueHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setInputValue(event.currentTarget.value);
+        if (onChangeRef.current && onChangeRef.current.value.trim() !== '') {
+            props.addTask(onChangeRef.current.value)
+            onChangeRef.current.value = '';
+        }
     }
     const onKeyPressInputValueHandler = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
@@ -45,10 +47,10 @@ export const ToDoList = (props: ToDoListPropsType) => {
         <div>
             <h3>{props.title}</h3>
             <div>
-                <input value={InputValue} onChange={onChangeInputValueHandler} onKeyDown={onKeyPressInputValueHandler}/>
+                <input ref={onChangeRef} onKeyDown={onKeyPressInputValueHandler}/>
                 <Button name={'add'} callBack={onClickAddTaskHandler}/>
             </div>
-            <ul>
+            <ul ref={listRef}>
                 {props.task.map((el, index) => {
                     const onClickCheckHandler = () => {
                         props.checkItemList(el.id);
@@ -74,6 +76,7 @@ export const ToDoList = (props: ToDoListPropsType) => {
                 <Button name={'Completed'} callBack={() => filterItemList('Completed')}/>
                 <Button name={'First three'} callBack={() => filterItemList('FirstThree')}/>
             </div>
+            {children}
         </div>
     );
 }
