@@ -42,19 +42,8 @@ const App = () => {
     const deleteAllTask = () => {
         setList([]);
     }
-    const checkItemList = (id: string) => {
-        const changedItemList = tasks.map(t=>{
-            if (t.id === id) {
-                if(t.isDone) {
-                    return {...t, isDone: false}
-                }else {
-                    return {...t, isDone: true}
-                }
-            }
-            return t
-        })
-
-        setList(changedItemList)
+    const checkItemList = (id: string, checked: boolean) => {
+        setList(tasks.map(t => t.id === id ? {...t, isDone: checked} : t));
     }
     const addTask = (taskTitle: string) => {
         const newTask = {id: v1(), title: taskTitle, isDone: false};
@@ -70,8 +59,9 @@ const App = () => {
                 removeButton={removeItemList}
                 checkItemList={checkItemList}
                 setFilter={setFilter}
-                deleteAllTask = {deleteAllTask}
-                addTask = {addTask}
+                deleteAllTask={deleteAllTask}
+                addTask={addTask}
+                filter={filter}
             />
         </div>
     );
