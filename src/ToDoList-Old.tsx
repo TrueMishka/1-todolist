@@ -1,7 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useRef, useState} from "react";
 import {FilterType} from "./App";
 import {Button} from "./components/Button";
-import {useAutoAnimate} from "@formkit/auto-animate/react";
 
 type ToDoListPropsType = {
     title: string
@@ -12,7 +11,6 @@ type ToDoListPropsType = {
     deleteAllTask: () => void
     addTask: (taskTitle: string) => void
     filter: FilterType
-    children?: React.ReactNode
 }
 
 type TaskType = {
@@ -20,28 +18,30 @@ type TaskType = {
     title: string;
     isDone: boolean;
 }
-export const ToDoList: React.FC<ToDoListPropsType> = ({children, ...props}) => {
-
-    let onChangeRef = useRef<HTMLInputElement>(null);
-    const [error, setError] = useState<string | null>(null);
-    const [listRef] = useAutoAnimate<HTMLUListElement>()
+export const ToDoList = (props: ToDoListPropsType) => {
 
     const filterItemList = (filter: FilterType) => {
         props.setFilter(filter);
     }
+
+    const [InputValue, setInputValue] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
+
+
     const onClickDeleteAllTask = () => {
         props.deleteAllTask();
     }
     const onClickAddTaskHandler = () => {
-        if (onChangeRef.current) {
-            if (onChangeRef.current.value.trim() !== '') {
-                props.addTask(onChangeRef.current.value.trim());
-                onChangeRef.current.value = '';
-            } else {
-                setError('Ошибка ввода!')
-                onChangeRef.current.value = '';
-            }
+        if (!(InputValue.trim() === '')) {
+            props.addTask(InputValue.trim());
+            setInputValue('');
+        } else {
+            setError('Ошибка ввода!')
+            setInputValue('');
         }
+    }
+    const onChangeInputValueHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        setInputValue(event.currentTarget.value);
     }
     const onKeyPressInputValueHandler = (event: KeyboardEvent<HTMLInputElement>) => {
         setError(null);
@@ -60,12 +60,13 @@ export const ToDoList: React.FC<ToDoListPropsType> = ({children, ...props}) => {
             <div>
                 <input
                     className={error ? 'error' : ''}
-                    ref={onChangeRef}
+                    value={InputValue}
+                    onChange={onChangeInputValueHandler}
                     onKeyDown={onKeyPressInputValueHandler}/>
                 <Button name={'add'} callBack={onClickAddTaskHandler}/>
                 {error && <div className={'error-message'}>{error}</div>}
             </div>
-            <ul ref={listRef}>
+            <ul>
                 {props.task.map((el, index) => {
                     const onClickRemoveHandler = () => {
                         props.removeButton(el.id);
@@ -86,20 +87,11 @@ export const ToDoList: React.FC<ToDoListPropsType> = ({children, ...props}) => {
                 <Button name={'DELETE ALL TASK'} callBack={onClickDeleteAllTask}/>
             </div>
             <div>
-                <Button className={props.filter === 'All' ? 'active-filter' : ''}
-                        name={'All'}
-                        callBack={() => filterItemList('All')}/>
-                <Button className={props.filter === 'Active' ? 'active-filter' : ''}
-                        name={'Active'}
-                        callBack={() => filterItemList('Active')}/>
-                <Button className={props.filter === 'Completed' ? 'active-filter' : ''}
-                        name={'Completed'}
-                        callBack={() => filterItemList('Completed')}/>
-                <Button className={props.filter === 'FirstThree' ? 'active-filter' : ''}
-                        name={'First three'}
-                        callBack={() => filterItemList('FirstThree')}/>
+                <Button className={props.filter === 'All' ? 'active-filter' : ''} name={'All'} callBack={() => filterItemList('All')}/>
+                <Button className={props.filter === 'Active' ? 'active-filter' : ''} name={'Active'} callBack={() => filterItemList('Active')}/>
+                <Button className={props.filter === 'Completed' ? 'active-filter' : ''} name={'Completed'} callBack={() => filterItemList('Completed')}/>
+                <Button className={props.filter === 'FirstThree' ? 'active-filter' : ''} name={'First three'} callBack={() => filterItemList('FirstThree')}/>
             </div>
-            {children}
         </div>
     );
 }
